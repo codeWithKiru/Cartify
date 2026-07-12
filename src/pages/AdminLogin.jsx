@@ -1,0 +1,107 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./AdminLogin.css";
+
+function AdminLogin() {
+
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function handleLogin() {
+
+    if (!email || !password) {
+
+      alert("Please fill all fields.");
+
+      return;
+
+    }
+
+    try {
+
+      const response = await fetch(
+        "http://127.0.0.1:5000/admin/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+
+        localStorage.setItem(
+          "adminToken",
+          data.token
+        );
+
+        alert("Admin Login Successful!");
+
+        navigate("/admin");
+
+      } else {
+
+        alert(data.message);
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Server Error");
+
+    }
+
+  }
+
+  return (
+
+    <section className="admin-login">
+
+      <div className="admin-login-box">
+
+        <h1>Cartify Admin</h1>
+
+        <input
+          type="email"
+          placeholder="Admin Email"
+          value={email}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+        />
+
+        <button
+          onClick={handleLogin}
+        >
+          Login
+        </button>
+
+      </div>
+
+    </section>
+
+  );
+
+}
+
+export default AdminLogin;

@@ -1,0 +1,93 @@
+.add-product{
+    max-width:700px;
+    margin:50px auto;
+    padding:40px;
+    background:white;
+    border-radius:15px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.add-product h1{
+    text-align:center;
+    margin-bottom:30px;
+    color:#111827;
+}
+
+.add-product form{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.add-product input,
+.add-product select,
+.add-product textarea{
+    width:100%;
+    padding:14px 16px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    font-size:16px;
+    outline:none;
+    transition:.3s;
+    box-sizing:border-box;
+}
+
+.add-product input:focus,
+.add-product select:focus,
+.add-product textarea:focus{
+    border-color:#111827;
+    box-shadow:0 0 5px rgba(17,24,39,.2);
+}
+
+.add-product textarea{
+    resize:vertical;
+    min-height:120px;
+}
+
+.add-product button{
+    padding:15px;
+    background:#111827;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:17px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.add-product button:hover{
+    background:#2563eb;
+}
+
+.add-product button:active{
+    transform:scale(.98);
+}
+
+@media(max-width:768px){
+
+.add-product{
+    margin:25px 15px;
+    padding:25px;
+}
+
+.add-product h1{
+    font-size:28px;
+}
+
+}
+
+@media(max-width:480px){
+
+.add-product{
+    padding:20px;
+}
+
+.add-product input,
+.add-product select,
+.add-product textarea,
+.add-product button{
+    font-size:15px;
+    padding:12px;
+}
+
+}
