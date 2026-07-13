@@ -1,12 +1,9 @@
 from flask import Blueprint, request, jsonify
 from database import get_connection
+from jwt_utils import generate_token
 import bcrypt
-import jwt
-import datetime
 
 users_bp = Blueprint("users", __name__)
-
-SECRET_KEY = "cartify_secret_key"
 
 
 # ==========================================
@@ -122,24 +119,22 @@ def login():
             "message": "Invalid email or password."
         }), 401
 
-    token = jwt.encode(
-        {
-            "user_id": user["id"],
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1)
-        },
-        SECRET_KEY,
-        algorithm="HS256"
-    )
+    token = generate_token(user["id"])
 
     return jsonify({
+
         "success": True,
         "message": "Login successful.",
         "token": token,
+
         "user": {
+
             "id": user["id"],
             "name": user["name"],
             "email": user["email"]
+
         }
+
     })
 
 
