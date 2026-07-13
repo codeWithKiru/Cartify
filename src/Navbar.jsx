@@ -1,21 +1,21 @@
 import "./Navbar.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 function Navbar({
+
   cartCount = 0,
-  wishlistCount = 0,
+
+  wishlistCount = 0
+
 }) {
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
+  const isLoggedIn = localStorage.getItem("userId");
 
-  function handleLogout() {
+  function logout() {
 
-    localStorage.removeItem("token");
     localStorage.removeItem("userId");
-
-    alert("Logged out successfully!");
 
     navigate("/login");
 
@@ -23,7 +23,7 @@ function Navbar({
 
   return (
 
-    <header className="navbar">
+    <nav className="navbar">
 
       <Link
         to="/"
@@ -32,99 +32,157 @@ function Navbar({
         🛒 Cartify
       </Link>
 
-      <div className="search-container">
+      <ul className="nav-links">
 
-        <input
-          type="text"
-          placeholder="Search products..."
-        />
+        <li>
 
-      </div>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? "active" : ""
+            }
+          >
+            Home
+          </NavLink>
 
-      <nav>
+        </li>
 
-        <ul className="nav-links">
+        <li>
 
-          <li>
+          <NavLink
+            to="/products"
+            className={({ isActive }) =>
+              isActive ? "active" : ""
+            }
+          >
+            Products
+          </NavLink>
 
-            <Link to="/">
-              Home
-            </Link>
+        </li>
 
-          </li>
+        <li>
 
-          <li>
+          <NavLink
+            to="/wishlist"
+            className={({ isActive }) =>
+              isActive ? "active" : ""
+            }
+          >
+            Wishlist
 
-            <Link to="/products">
-              Products
-            </Link>
+            {
 
-          </li>
+              wishlistCount > 0 && (
 
-          {token && (
+                <span className="badge">
 
-            <li>
+                  {wishlistCount}
 
-              <Link to="/orders">
-                📦 My Orders
-              </Link>
+                </span>
 
-            </li>
+              )
 
-          )}
+            }
 
-          <li>
+          </NavLink>
 
-            <Link to="/wishlist">
-              ❤️ Wishlist ({wishlistCount})
-            </Link>
+        </li>
 
-          </li>
+        <li>
 
-          <li>
+          <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              isActive ? "active" : ""
+            }
+          >
+            Cart
 
-            <Link to="/cart">
-              🛒 Cart ({cartCount})
-            </Link>
+            {
 
-          </li>
+              cartCount > 0 && (
 
-          {token ? (
+                <span className="badge">
 
-            <li>
+                  {cartCount}
 
-              <button
-                onClick={handleLogout}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "white",
-                  cursor: "pointer",
-                  fontSize: "16px"
-                }}
-              >
-                👤 Logout
-              </button>
+                </span>
 
-            </li>
+              )
+
+            }
+
+          </NavLink>
+
+        </li>
+
+        {
+
+          isLoggedIn ? (
+
+            <>
+
+              <li>
+
+                <NavLink
+                  to="/orders"
+                  className={({ isActive }) =>
+                    isActive ? "active" : ""
+                  }
+                >
+                  My Orders
+                </NavLink>
+
+              </li>
+
+              <li>
+
+                <button
+                  className="logout-nav"
+                  onClick={logout}
+                >
+                  Logout
+                </button>
+
+              </li>
+
+            </>
 
           ) : (
 
             <li>
 
-              <Link to="/login">
-                👤 Login
-              </Link>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  isActive ? "active" : ""
+                }
+              >
+                Login
+              </NavLink>
 
             </li>
 
-          )}
+          )
 
-        </ul>
+        }
 
-      </nav>
+        <li>
 
-    </header>
+          <NavLink
+            to="/admin-login"
+            className={({ isActive }) =>
+              isActive ? "active" : ""
+            }
+          >
+            Admin
+          </NavLink>
+
+        </li>
+
+      </ul>
+
+    </nav>
 
   );
 

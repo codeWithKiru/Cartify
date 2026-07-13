@@ -29,6 +29,26 @@ function Orders() {
 
   }, []);
 
+  function getStatusClass(status) {
+
+    switch (status) {
+
+      case "Placed":
+        return "placed";
+
+      case "Shipped":
+        return "shipped";
+
+      case "Delivered":
+        return "delivered";
+
+      default:
+        return "";
+
+    }
+
+  }
+
   return (
 
     <>
@@ -37,80 +57,192 @@ function Orders() {
 
       <section className="orders-page">
 
-        <h1>My Orders</h1>
+        <h1>📦 My Orders</h1>
 
-        {orders.length === 0 ? (
+        {
 
-          <h2>No Orders Yet.</h2>
+          orders.length === 0 ? (
 
-        ) : (
+            <div className="empty-orders">
 
-          orders.map((order) => (
-
-            <div
-              className="order-card"
-              key={order.order_id}
-            >
-
-              <div className="order-header">
-
-                <h2>
-                  Order #{order.order_id}
-                </h2>
-
-                <span>
-                  {order.status}
-                </span>
-
-              </div>
+              <h2>No Orders Yet 😔</h2>
 
               <p>
-                Date : {order.created_at}
+                Start shopping and your orders will appear here.
               </p>
-
-              <p>
-                Total : ₹{order.total_amount}
-              </p>
-
-              <div className="order-products">
-
-                {order.products.map((product, index) => (
-
-                  <div
-                    className="order-product"
-                    key={index}
-                  >
-
-                    <img
-                      src={`${API_URL}/images/${product.image}`}
-                      alt={product.name}
-                    />
-
-                    <div>
-
-                      <h4>{product.name}</h4>
-
-                      <p>
-                        Quantity : {product.quantity}
-                      </p>
-
-                      <p>
-                        ₹{product.price}
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                ))}
-
-              </div>
 
             </div>
 
-          ))
+          ) : (
 
-        )}
+            orders.map((order) => (
+
+              <div
+                className="order-card"
+                key={order.order_id}
+              >
+
+                <div className="order-header">
+
+                  <div>
+
+                    <h2>
+
+                      Order #{order.order_id}
+
+                    </h2>
+
+                    <p>
+
+                      Ordered on
+
+                      <strong>
+
+                        {" "}
+                        {order.created_at}
+
+                      </strong>
+
+                    </p>
+
+                  </div>
+
+                  <span
+                    className={`status ${getStatusClass(order.status)}`}
+                  >
+
+                    {order.status}
+
+                  </span>
+
+                </div>
+
+                {/* Timeline */}
+
+                <div className="timeline">
+
+                  <div
+                    className={
+                      order.status === "Placed" ||
+                      order.status === "Shipped" ||
+                      order.status === "Delivered"
+                        ? "step active"
+                        : "step"
+                    }
+                  >
+
+                    <div className="circle"></div>
+
+                    <p>Placed</p>
+
+                  </div>
+
+                  <div className="line"></div>
+
+                  <div
+                    className={
+                      order.status === "Shipped" ||
+                      order.status === "Delivered"
+                        ? "step active"
+                        : "step"
+                    }
+                  >
+
+                    <div className="circle"></div>
+
+                    <p>Shipped</p>
+
+                  </div>
+
+                  <div className="line"></div>
+
+                  <div
+                    className={
+                      order.status === "Delivered"
+                        ? "step active"
+                        : "step"
+                    }
+                  >
+
+                    <div className="circle"></div>
+
+                    <p>Delivered</p>
+
+                  </div>
+
+                </div>
+
+                <div className="products">
+
+                  {
+
+                    order.products.map((product, index) => (
+
+                      <div
+                        className="product-card"
+                        key={index}
+                      >
+
+                        <img
+                          src={`${API_URL}/images/${product.image}`}
+                          alt={product.name}
+                        />
+
+                        <div className="product-details">
+
+                          <h3>
+
+                            {product.name}
+
+                          </h3>
+
+                          <p>
+
+                            Quantity :
+                            {" "}
+                            {product.quantity}
+
+                          </p>
+
+                          <p>
+
+                            ₹{product.price}
+
+                          </p>
+
+                        </div>
+
+                      </div>
+
+                    ))
+
+                  }
+
+                </div>
+
+                <div className="order-total">
+
+                  <h3>
+
+                    Total Paid
+
+                  </h3>
+
+                  <h2>
+
+                    ₹{order.total_amount}
+
+                  </h2>
+
+                </div>
+
+              </div>
+
+            ))
+
+          )
+
+        }
 
       </section>
 

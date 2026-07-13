@@ -8,12 +8,26 @@ function Products({
   addToCart,
   toggleWishlist,
 }) {
+
+  console.log("Products Page Rendered");
+
   return (
+
     <>
       <Navbar
         cartCount={cartItems.length}
         wishlistCount={wishlistItems.length}
       />
+
+      <h1
+        style={{
+          textAlign: "center",
+          marginTop: "30px",
+          color: "red",
+        }}
+      >
+        PRODUCTS PAGE
+      </h1>
 
       <Product
         addToCart={addToCart}
@@ -23,7 +37,9 @@ function Products({
 
       <Footer />
     </>
+
   );
+
 }
 
 export default Products;

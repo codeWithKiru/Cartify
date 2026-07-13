@@ -3,12 +3,12 @@ from database import get_connection
 connection = get_connection()
 cursor = connection.cursor()
 
-# ==========================
+# ==================================
 # PRODUCTS TABLE
-# ==========================
+# ==================================
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE IF NOT EXISTS products(
 
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS products (
 )
 """)
 
-# ==========================
+# ==================================
 # USERS TABLE
-# ==========================
+# ==================================
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS users(
 
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
@@ -49,12 +49,12 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 
-# ==========================
+# ==================================
 # CART TABLE
-# ==========================
+# ==================================
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS cart (
+CREATE TABLE IF NOT EXISTS cart(
 
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
@@ -71,9 +71,113 @@ CREATE TABLE IF NOT EXISTS cart (
 )
 """)
 
-# ==========================
-# INSERT PRODUCTS
-# ==========================
+# ==================================
+# ORDERS TABLE
+# ==================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS orders(
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    user_id INTEGER NOT NULL,
+
+    total_amount REAL NOT NULL,
+
+    status TEXT DEFAULT 'Placed',
+
+    payment_status TEXT DEFAULT 'Pending',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(user_id) REFERENCES users(id)
+
+)
+""")
+
+# ==================================
+# ORDER ITEMS TABLE
+# ==================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS order_items(
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    order_id INTEGER NOT NULL,
+
+    product_id INTEGER NOT NULL,
+
+    quantity INTEGER NOT NULL,
+
+    price REAL NOT NULL,
+
+    FOREIGN KEY(order_id) REFERENCES orders(id),
+
+    FOREIGN KEY(product_id) REFERENCES products(id)
+
+)
+""")
+
+# ==================================
+# PAYMENTS TABLE
+# ==================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS payments(
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    order_id INTEGER NOT NULL,
+
+    user_id INTEGER NOT NULL,
+
+    payment_method TEXT NOT NULL,
+
+    transaction_id TEXT UNIQUE NOT NULL,
+
+    amount REAL NOT NULL,
+
+    status TEXT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(order_id) REFERENCES orders(id),
+
+    FOREIGN KEY(user_id) REFERENCES users(id)
+
+)
+""")
+
+# ==================================
+# REVIEWS TABLE
+# ==================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS reviews(
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    user_id INTEGER NOT NULL,
+
+    product_id INTEGER NOT NULL,
+
+    rating INTEGER NOT NULL,
+
+    review TEXT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(user_id) REFERENCES users(id),
+
+    FOREIGN KEY(product_id) REFERENCES products(id)
+
+)
+""")
+
+# ==================================
+# INSERT DEMO PRODUCTS
+# ==================================
 
 cursor.execute("DELETE FROM products")
 

@@ -15,33 +15,47 @@ def dashboard():
     cursor = connection.cursor()
 
     # Total Users
-    cursor.execute("SELECT COUNT(*) AS total_users FROM users")
+    cursor.execute("""
+        SELECT COUNT(*) AS total_users
+        FROM users
+    """)
     total_users = cursor.fetchone()["total_users"]
 
     # Total Products
-    cursor.execute("SELECT COUNT(*) AS total_products FROM products")
+    cursor.execute("""
+        SELECT COUNT(*) AS total_products
+        FROM products
+    """)
     total_products = cursor.fetchone()["total_products"]
 
     # Total Orders
-    cursor.execute("SELECT COUNT(*) AS total_orders FROM orders")
+    cursor.execute("""
+        SELECT COUNT(*) AS total_orders
+        FROM orders
+    """)
     total_orders = cursor.fetchone()["total_orders"]
 
     # Total Revenue
     cursor.execute("""
-        SELECT
-            IFNULL(SUM(total_amount),0) AS revenue
+        SELECT IFNULL(SUM(total_amount), 0) AS revenue
         FROM orders
     """)
-
     revenue = cursor.fetchone()["revenue"]
+
+    # Low Stock Products
+    cursor.execute("""
+        SELECT COUNT(*) AS low_stock
+        FROM products
+        WHERE stock <= 5
+    """)
+    low_stock = cursor.fetchone()["low_stock"]
 
     connection.close()
 
     return jsonify({
-
         "users": total_users,
         "products": total_products,
         "orders": total_orders,
-        "revenue": revenue
-
+        "revenue": revenue,
+        "low_stock": low_stock
     })

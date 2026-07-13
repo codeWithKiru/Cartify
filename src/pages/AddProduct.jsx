@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import API_URL from "../config/api";
 import "./AddProduct.css";
 
@@ -29,7 +31,7 @@ function AddProduct() {
       !image
     ) {
 
-      alert("Please fill all fields.");
+      toast.warning("Please fill all fields.");
 
       return;
 
@@ -46,21 +48,24 @@ function AddProduct() {
       formData.append("image", image);
 
       const uploadResponse = await fetch(
+
         `${API_URL}/upload`,
+
         {
 
           method: "POST",
 
-          body: formData,
+          body: formData
 
         }
+
       );
 
       const uploadData = await uploadResponse.json();
 
       if (!uploadResponse.ok) {
 
-        alert(uploadData.message);
+        toast.error(uploadData.message);
 
         return;
 
@@ -71,49 +76,64 @@ function AddProduct() {
       // ==========================
 
       const response = await fetch(
+
         `${API_URL}/products`,
+
         {
 
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
+
+            "Content-Type": "application/json"
+
           },
 
           body: JSON.stringify({
 
             name,
+
             category,
+
             brand,
+
             price: Number(price),
+
             rating: Number(rating),
+
             stock: Number(stock),
+
             image: uploadData.filename
 
-          }),
+          })
 
         }
+
       );
 
       const data = await response.json();
 
       if (response.ok) {
 
-        alert(data.message);
+        toast.success(data.message);
 
         navigate("/admin/products");
 
-      } else {
+      }
 
-        alert(data.message);
+      else {
+
+        toast.error(data.message);
 
       }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.error(error);
 
-      alert("Server Error");
+      toast.error("Server Error");
 
     }
 
@@ -123,61 +143,116 @@ function AddProduct() {
 
     <div className="add-product">
 
-      <h1>Add Product</h1>
+      <h1>
+
+        Add Product
+
+      </h1>
 
       <form onSubmit={handleSubmit}>
 
         <input
+
           type="text"
+
           placeholder="Product Name"
+
           value={name}
-          onChange={(e) => setName(e.target.value)}
+
+          onChange={(e) =>
+            setName(e.target.value)
+          }
+
         />
 
         <input
+
           type="text"
+
           placeholder="Category"
+
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
+
+          onChange={(e) =>
+            setCategory(e.target.value)
+          }
+
         />
 
         <input
+
           type="text"
+
           placeholder="Brand"
+
           value={brand}
-          onChange={(e) => setBrand(e.target.value)}
+
+          onChange={(e) =>
+            setBrand(e.target.value)
+          }
+
         />
 
         <input
+
           type="number"
+
           placeholder="Price"
+
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+
+          onChange={(e) =>
+            setPrice(e.target.value)
+          }
+
         />
 
         <input
+
           type="number"
+
           step="0.1"
+
           placeholder="Rating"
+
           value={rating}
-          onChange={(e) => setRating(e.target.value)}
+
+          onChange={(e) =>
+            setRating(e.target.value)
+          }
+
         />
 
         <input
+
           type="number"
+
           placeholder="Stock"
+
           value={stock}
-          onChange={(e) => setStock(e.target.value)}
+
+          onChange={(e) =>
+            setStock(e.target.value)
+          }
+
         />
 
         <input
+
           type="file"
+
           accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
+
+          onChange={(e) =>
+            setImage(e.target.files[0])
+          }
+
         />
 
         <button type="submit">
+
           Add Product
+
         </button>
 
       </form>

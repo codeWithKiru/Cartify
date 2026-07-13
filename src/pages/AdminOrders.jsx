@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import API_URL from "../config/api";
 import "./AdminOrders.css";
 
@@ -24,6 +26,8 @@ function AdminOrders() {
       .catch((error) => {
 
         console.error(error);
+
+        toast.error("Failed to load orders.");
 
       });
 
@@ -61,21 +65,25 @@ function AdminOrders() {
 
       if (response.ok) {
 
-        alert(data.message);
+        toast.success(data.message);
 
         loadOrders();
 
-      } else {
+      }
 
-        alert(data.message);
+      else {
+
+        toast.error(data.message);
 
       }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.error(error);
 
-      alert("Server Error");
+      toast.error("Server Error");
 
     }
 
@@ -85,7 +93,11 @@ function AdminOrders() {
 
     <div className="admin-orders">
 
-      <h1>Manage Orders</h1>
+      <h1>
+
+        Manage Orders
+
+      </h1>
 
       <table>
 
@@ -111,51 +123,89 @@ function AdminOrders() {
 
         <tbody>
 
-          {orders.map((order) => (
+          {
 
-            <tr key={order.id}>
+            orders.map((order) => (
 
-              <td>{order.id}</td>
+              <tr key={order.id}>
 
-              <td>{order.user_id}</td>
+                <td>
 
-              <td>₹{order.total_amount}</td>
+                  {order.id}
 
-              <td>{order.status}</td>
+                </td>
 
-              <td>{order.created_at}</td>
+                <td>
 
-              <td>
+                  {order.user_id}
 
-                <select
-                  value={order.status}
-                  onChange={(e) =>
-                    updateStatus(
-                      order.id,
-                      e.target.value
-                    )
-                  }
-                >
+                </td>
 
-                  <option value="Placed">
-                    Placed
-                  </option>
+                <td>
 
-                  <option value="Shipped">
-                    Shipped
-                  </option>
+                  ₹{order.total_amount}
 
-                  <option value="Delivered">
-                    Delivered
-                  </option>
+                </td>
 
-                </select>
+                <td>
 
-              </td>
+                  {order.status}
 
-            </tr>
+                </td>
 
-          ))}
+                <td>
+
+                  {order.created_at}
+
+                </td>
+
+                <td>
+
+                  <select
+
+                    value={order.status}
+
+                    onChange={(e) =>
+
+                      updateStatus(
+
+                        order.id,
+
+                        e.target.value
+
+                      )
+
+                    }
+
+                  >
+
+                    <option value="Placed">
+
+                      Placed
+
+                    </option>
+
+                    <option value="Shipped">
+
+                      Shipped
+
+                    </option>
+
+                    <option value="Delivered">
+
+                      Delivered
+
+                    </option>
+
+                  </select>
+
+                </td>
+
+              </tr>
+
+            ))
+
+          }
 
         </tbody>
 

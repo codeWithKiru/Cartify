@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import API_URL from "../config/api";
@@ -29,9 +31,13 @@ function Cart() {
 
       setCartItems(data);
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.error(error);
+
+      toast.error("Failed to load cart.");
 
     }
 
@@ -39,77 +45,127 @@ function Cart() {
 
   async function increaseQuantity(cartId, currentQuantity) {
 
-    await fetch(
-      `${API_URL}/cart/${cartId}`,
-      {
+    try {
 
-        method: "PUT",
+      await fetch(
+        `${API_URL}/cart/${cartId}`,
+        {
 
-        headers: {
-          "Content-Type": "application/json",
-        },
+          method: "PUT",
 
-        body: JSON.stringify({
-          quantity: currentQuantity + 1,
-        }),
+          headers: {
 
-      }
-    );
+            "Content-Type": "application/json",
 
-    fetchCart();
+          },
+
+          body: JSON.stringify({
+
+            quantity: currentQuantity + 1,
+
+          }),
+
+        }
+      );
+
+      fetchCart();
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      toast.error("Failed to update quantity.");
+
+    }
 
   }
 
   async function decreaseQuantity(cartId, currentQuantity) {
 
-    if (currentQuantity === 1) {
+    try {
 
-      removeFromCart(cartId);
+      if (currentQuantity === 1) {
 
-      return;
+        removeFromCart(cartId);
+
+        return;
+
+      }
+
+      await fetch(
+        `${API_URL}/cart/${cartId}`,
+        {
+
+          method: "PUT",
+
+          headers: {
+
+            "Content-Type": "application/json",
+
+          },
+
+          body: JSON.stringify({
+
+            quantity: currentQuantity - 1,
+
+          }),
+
+        }
+      );
+
+      fetchCart();
 
     }
 
-    await fetch(
-      `${API_URL}/cart/${cartId}`,
-      {
+    catch (error) {
 
-        method: "PUT",
+      console.error(error);
 
-        headers: {
-          "Content-Type": "application/json",
-        },
+      toast.error("Failed to update quantity.");
 
-        body: JSON.stringify({
-          quantity: currentQuantity - 1,
-        }),
-
-      }
-    );
-
-    fetchCart();
+    }
 
   }
 
   async function removeFromCart(cartId) {
 
-    await fetch(
-      `${API_URL}/cart/${cartId}`,
-      {
+    try {
 
-        method: "DELETE",
+      await fetch(
+        `${API_URL}/cart/${cartId}`,
+        {
 
-      }
-    );
+          method: "DELETE",
 
-    fetchCart();
+        }
+      );
+
+      toast.success("Item removed from cart.");
+
+      fetchCart();
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      toast.error("Failed to remove item.");
+
+    }
 
   }
 
   const totalPrice = cartItems.reduce(
+
     (total, item) =>
+
       total + item.price * item.quantity,
+
     0
+
   );
 
   return (
@@ -117,118 +173,192 @@ function Cart() {
     <>
 
       <Navbar
+
         cartCount={cartItems.length}
+
         wishlistCount={0}
+
       />
 
       <section className="cart-page">
 
-        <h1>Your Shopping Cart</h1>
+        <h1>
 
-        {cartItems.length === 0 ? (
+          Your Shopping Cart
 
-          <h2>Your cart is empty.</h2>
+        </h1>
 
-        ) : (
+        {
 
-          <>
+          cartItems.length === 0 ?
 
-            <div className="cart-container">
+          (
 
-              {cartItems.map((item) => (
+            <h2>
 
-                <div
-                  className="cart-card"
-                  key={item.id}
-                >
+              Your cart is empty.
 
-                  <img
-                    src={`${API_URL}/images/${item.image}`}
-                    alt={item.name}
-                  />
+            </h2>
 
-                  <h3>{item.name}</h3>
+          )
 
-                  <p className="price">
-                    ₹{item.price}
-                  </p>
+          :
 
-                  <p className="rating">
-                    ⭐ {item.rating}
-                  </p>
+          (
 
-                  <p className="brand">
-                    {item.brand}
-                  </p>
+            <>
 
-                  <div className="quantity-box">
+              <div className="cart-container">
 
-                    <button
-                      onClick={() =>
-                        decreaseQuantity(
-                          item.id,
-                          item.quantity
-                        )
-                      }
+                {
+
+                  cartItems.map((item) => (
+
+                    <div
+
+                      className="cart-card"
+
+                      key={item.id}
+
                     >
-                      -
-                    </button>
 
-                    <span>
-                      {item.quantity}
-                    </span>
+                      <img
 
-                    <button
-                      onClick={() =>
-                        increaseQuantity(
-                          item.id,
-                          item.quantity
-                        )
-                      }
-                    >
-                      +
-                    </button>
+                        src={`${API_URL}/images/${item.image}`}
 
-                  </div>
+                        alt={item.name}
 
-                  <p className="subtotal">
-                    Subtotal : ₹{item.price * item.quantity}
-                  </p>
+                      />
 
-                  <button
-                    className="remove-btn"
-                    onClick={() =>
-                      removeFromCart(item.id)
-                    }
-                  >
-                    Remove
+                      <h3>
+
+                        {item.name}
+
+                      </h3>
+
+                      <p className="price">
+
+                        ₹{item.price}
+
+                      </p>
+
+                      <p className="rating">
+
+                        ⭐ {item.rating}
+
+                      </p>
+
+                      <p className="brand">
+
+                        {item.brand}
+
+                      </p>
+
+                      <div className="quantity-box">
+
+                        <button
+
+                          onClick={() =>
+
+                            decreaseQuantity(
+
+                              item.id,
+
+                              item.quantity
+
+                            )
+
+                          }
+
+                        >
+
+                          -
+
+                        </button>
+
+                        <span>
+
+                          {item.quantity}
+
+                        </span>
+
+                        <button
+
+                          onClick={() =>
+
+                            increaseQuantity(
+
+                              item.id,
+
+                              item.quantity
+
+                            )
+
+                          }
+
+                        >
+
+                          +
+
+                        </button>
+
+                      </div>
+
+                      <p className="subtotal">
+
+                        Subtotal : ₹{item.price * item.quantity}
+
+                      </p>
+
+                      <button
+
+                        className="remove-btn"
+
+                        onClick={() =>
+
+                          removeFromCart(item.id)
+
+                        }
+
+                      >
+
+                        Remove
+
+                      </button>
+
+                    </div>
+
+                  ))
+
+                }
+
+              </div>
+
+              <div className="cart-summary">
+
+                <h2>
+
+                  Total : ₹{totalPrice}
+
+                </h2>
+
+                <Link to="/checkout">
+
+                  <button className="checkout-btn">
+
+                    Proceed to Checkout
+
                   </button>
 
-                </div>
+                </Link>
 
-              ))}
+              </div>
 
-            </div>
+            </>
 
-            <div className="cart-summary">
+          )
 
-              <h2>
-                Total : ₹{totalPrice}
-              </h2>
-
-              <Link to="/checkout">
-
-                <button className="checkout-btn">
-                  Proceed to Checkout
-                </button>
-
-              </Link>
-
-            </div>
-
-          </>
-
-        )}
+        }
 
       </section>
 

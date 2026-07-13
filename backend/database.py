@@ -2,10 +2,13 @@ import sqlite3
 
 DATABASE_NAME = "database.db"
 
-
 def get_connection():
 
-    connection = sqlite3.connect(DATABASE_NAME)
+    connection = sqlite3.connect(
+        DATABASE_NAME,
+        timeout=30,
+        check_same_thread=False
+    )
 
     connection.row_factory = sqlite3.Row
 

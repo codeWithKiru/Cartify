@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import API_URL from "../config/api";
 import "./AdminProducts.css";
 
@@ -28,6 +30,8 @@ function AdminProducts() {
 
         console.error(error);
 
+        toast.error("Failed to load products.");
+
       });
 
   }
@@ -51,7 +55,9 @@ function AdminProducts() {
         `${API_URL}/products/${id}`,
 
         {
-          method: "DELETE",
+
+          method: "DELETE"
+
         }
 
       );
@@ -60,21 +66,25 @@ function AdminProducts() {
 
       if (response.ok) {
 
-        alert(data.message);
+        toast.success(data.message);
 
         loadProducts();
 
-      } else {
+      }
 
-        alert(data.message);
+      else {
+
+        toast.error(data.message);
 
       }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.error(error);
 
-      alert("Server Error");
+      toast.error("Server Error");
 
     }
 
@@ -86,7 +96,11 @@ function AdminProducts() {
 
       <div className="top-bar">
 
-        <h1>Manage Products</h1>
+        <h1>
+
+          Manage Products
+
+        </h1>
 
         <Link to="/admin/add-product">
 
@@ -128,55 +142,95 @@ function AdminProducts() {
 
         <tbody>
 
-          {products.map((product) => (
+          {
 
-            <tr key={product.id}>
+            products.map((product) => (
 
-              <td>{product.id}</td>
+              <tr key={product.id}>
 
-              <td>
+                <td>
 
-                <img
-                  src={`${API_URL}/images/${product.image}`}
-                  alt={product.name}
-                  width="70"
-                />
+                  {product.id}
 
-              </td>
+                </td>
 
-              <td>{product.name}</td>
+                <td>
 
-              <td>{product.category}</td>
+                  <img
 
-              <td>{product.brand}</td>
+                    src={`${API_URL}/images/${product.image}`}
 
-              <td>₹{product.price}</td>
+                    alt={product.name}
 
-              <td>{product.stock}</td>
+                    width="70"
 
-              <td>
+                  />
 
-                <button
-                  onClick={() =>
-                    navigate(`/admin/edit-product/${product.id}`)
-                  }
-                >
-                  Edit
-                </button>
+                </td>
 
-                <button
-                  onClick={() =>
-                    deleteProduct(product.id)
-                  }
-                >
-                  Delete
-                </button>
+                <td>
 
-              </td>
+                  {product.name}
 
-            </tr>
+                </td>
 
-          ))}
+                <td>
+
+                  {product.category}
+
+                </td>
+
+                <td>
+
+                  {product.brand}
+
+                </td>
+
+                <td>
+
+                  ₹{product.price}
+
+                </td>
+
+                <td>
+
+                  {product.stock}
+
+                </td>
+
+                <td>
+
+                  <button
+
+                    onClick={() =>
+                      navigate(`/admin/edit-product/${product.id}`)
+                    }
+
+                  >
+
+                    Edit
+
+                  </button>
+
+                  <button
+
+                    onClick={() =>
+                      deleteProduct(product.id)
+                    }
+
+                  >
+
+                    Delete
+
+                  </button>
+
+                </td>
+
+              </tr>
+
+            ))
+
+          }
 
         </tbody>
 

@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import Wishlist from "./pages/Wishlist";
 import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
+import Payment from "./pages/Payment";
 import OrderSuccess from "./pages/OrderSuccess";
 import Orders from "./pages/Orders";
 
@@ -21,6 +22,8 @@ import AdminOrders from "./pages/AdminOrders";
 import AdminUsers from "./pages/AdminUsers";
 
 import ProtectedRoute from "./ProtectedRoute";
+import AdminProtectedRoute from "./AdminProtectedRoute";
+import ScrollToTop from "./ScrollToTop";
 
 function App() {
 
@@ -122,6 +125,8 @@ function App() {
 
     <BrowserRouter>
 
+      <ScrollToTop />
+
       <Routes>
 
         {/* ===========================
@@ -212,6 +217,17 @@ function App() {
           }
         />
 
+        {/* NEW PAYMENT ROUTE */}
+
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/order-success"
           element={
@@ -241,32 +257,56 @@ function App() {
 
         <Route
           path="/admin"
-          element={<AdminDashboard />}
+          element={
+            <AdminProtectedRoute>
+              <AdminDashboard />
+            </AdminProtectedRoute>
+          }
         />
 
         <Route
           path="/admin/products"
-          element={<AdminProducts />}
+          element={
+            <AdminProtectedRoute>
+              <AdminProducts />
+            </AdminProtectedRoute>
+          }
         />
 
         <Route
           path="/admin/add-product"
-          element={<AddProduct />}
+          element={
+            <AdminProtectedRoute>
+              <AddProduct />
+            </AdminProtectedRoute>
+          }
         />
 
         <Route
           path="/admin/edit-product/:id"
-          element={<EditProduct />}
+          element={
+            <AdminProtectedRoute>
+              <EditProduct />
+            </AdminProtectedRoute>
+          }
         />
 
         <Route
           path="/admin/orders"
-          element={<AdminOrders />}
+          element={
+            <AdminProtectedRoute>
+              <AdminOrders />
+            </AdminProtectedRoute>
+          }
         />
 
         <Route
           path="/admin/users"
-          element={<AdminUsers />}
+          element={
+            <AdminProtectedRoute>
+              <AdminUsers />
+            </AdminProtectedRoute>
+          }
         />
 
       </Routes>

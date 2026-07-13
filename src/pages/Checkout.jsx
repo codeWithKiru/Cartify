@@ -2,6 +2,7 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import "./Checkout.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import API_URL from "../config/api";
 
 function Checkout({
@@ -23,15 +24,18 @@ function Checkout({
 
     if (!userId) {
 
-      alert("Please login first.");
+      toast.warning("Please login first.");
+
       navigate("/login");
+
       return;
 
     }
 
     if (cartItems.length === 0) {
 
-      alert("Your cart is empty.");
+      toast.warning("Your cart is empty.");
+
       return;
 
     }
@@ -39,41 +43,62 @@ function Checkout({
     try {
 
       const response = await fetch(
+
         `${API_URL}/place-order`,
+
         {
 
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
+
+            "Content-Type": "application/json"
+
           },
 
           body: JSON.stringify({
-            user_id: Number(userId),
-          }),
+
+            user_id: Number(userId)
+
+          })
 
         }
+
       );
 
       const data = await response.json();
 
       if (response.ok) {
 
-        alert(data.message);
+        toast.success("Order placed successfully!");
 
-        navigate("/order-success");
+        navigate("/payment", {
 
-      } else {
+          state: {
 
-        alert(data.message);
+            orderId: data.order_id,
+
+            amount: totalPrice
+
+          }
+
+        });
 
       }
 
-    } catch (error) {
+      else {
+
+        toast.error(data.message);
+
+      }
+
+    }
+
+    catch (error) {
 
       console.error(error);
 
-      alert("Server Error");
+      toast.error("Server Error");
 
     }
 
@@ -84,78 +109,127 @@ function Checkout({
     <>
 
       <Navbar
+
         cartCount={cartItems.length}
+
         wishlistCount={wishlistItems.length}
+
       />
 
       <section className="checkout">
 
         <div className="checkout-left">
 
-          <h2>Delivery Address</h2>
+          <h2>
+
+            Delivery Address
+
+          </h2>
 
           <input
+
             type="text"
+
             placeholder="Full Name"
+
           />
 
           <input
+
             type="email"
+
             placeholder="Email"
+
           />
 
           <input
+
             type="tel"
+
             placeholder="Phone Number"
+
           />
 
           <textarea
+
             placeholder="Address"
-          ></textarea>
+
+          >
+
+          </textarea>
 
           <input
+
             type="text"
+
             placeholder="City"
+
           />
 
           <input
+
             type="text"
+
             placeholder="Pincode"
+
           />
 
         </div>
 
         <div className="checkout-right">
 
-          <h2>Order Summary</h2>
+          <h2>
 
-          {cartItems.map((item) => (
+            Order Summary
 
-            <div
-              className="summary-item"
-              key={item.id}
-            >
+          </h2>
 
-              <span>
-                {item.name}
-              </span>
+          {
 
-              <span>
-                ₹{item.price * item.quantity}
-              </span>
+            cartItems.map((item) => (
 
-            </div>
+              <div
 
-          ))}
+                className="summary-item"
+
+                key={item.id}
+
+              >
+
+                <span>
+
+                  {item.name}
+
+                </span>
+
+                <span>
+
+                  ₹{item.price * item.quantity}
+
+                </span>
+
+              </div>
+
+            ))
+
+          }
 
           <hr />
 
           <h3>
+
             Total : ₹{totalPrice}
+
           </h3>
 
-          <button onClick={placeOrder}>
-            Place Order
+          <button
+
+            onClick={placeOrder}
+
+          >
+
+            Proceed to Payment
+
           </button>
 
         </div>

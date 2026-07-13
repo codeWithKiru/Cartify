@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import "./Product.css";
 import QuickView from "./QuickView";
 import API_URL from "./config/api";
@@ -31,6 +33,8 @@ function Product({
 
         console.error("Error fetching products:", error);
 
+        toast.error("Failed to load products.");
+
       });
 
   }, []);
@@ -41,7 +45,7 @@ function Product({
 
     if (!userId) {
 
-      alert("Please login first.");
+      toast.warning("Please login first.");
 
       return;
 
@@ -53,13 +57,16 @@ function Product({
         `${API_URL}/cart`,
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
           },
+
           body: JSON.stringify({
             user_id: Number(userId),
             product_id: product.id,
           }),
+
         }
       );
 
@@ -67,21 +74,25 @@ function Product({
 
       if (response.ok) {
 
-        alert(data.message);
+        toast.success(data.message);
 
         addToCart(product);
 
-      } else {
+      }
 
-        alert(data.message);
+      else {
+
+        toast.error(data.message);
 
       }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.error(error);
 
-      alert("Server Error");
+      toast.error("Server Error");
 
     }
 
@@ -203,6 +214,7 @@ function Product({
         </div>
 
         <h2>Total Products: {products.length}</h2>
+
         <h2>Filtered Products: {filteredProducts.length}</h2>
 
         <div className="product-grid">

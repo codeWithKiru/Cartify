@@ -1,7 +1,16 @@
 import "./Hero.css";
 import heroImage from "./assets/hero.png";
+import { useNavigate } from "react-router-dom";
 
 function Hero() {
+
+  const navigate = useNavigate();
+
+  function goToProducts() {
+    console.log("Button Clicked");
+    navigate("/products");
+  }
+
   return (
     <section className="hero">
 
@@ -25,11 +34,17 @@ function Hero() {
 
         <div className="hero-buttons">
 
-          <button className="shop-btn">
+          <button
+            className="shop-btn"
+            onClick={goToProducts}
+          >
             Shop Now
           </button>
 
-          <button className="explore-btn">
+          <button
+            className="explore-btn"
+            onClick={goToProducts}
+          >
             Explore
           </button>
 

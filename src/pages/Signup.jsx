@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import API_URL from "../config/api";
+
 import "./Signup.css";
 
 function Signup() {
@@ -14,11 +17,19 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignup = async () => {
+  async function handleSignup() {
+
+    if (!name || !email || !password || !confirmPassword) {
+
+      toast.warning("Please fill all the fields.");
+
+      return;
+
+    }
 
     if (password !== confirmPassword) {
 
-      alert("Passwords do not match");
+      toast.error("Passwords do not match.");
 
       return;
 
@@ -27,47 +38,60 @@ function Signup() {
     try {
 
       const response = await fetch(
+
         `${API_URL}/register`,
+
         {
 
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
+
+            "Content-Type": "application/json"
+
           },
 
           body: JSON.stringify({
+
             name,
+
             email,
-            password,
-          }),
+
+            password
+
+          })
 
         }
+
       );
 
       const data = await response.json();
 
       if (response.ok) {
 
-        alert("Account created successfully!");
+        toast.success("Account created successfully!");
 
         navigate("/login");
 
-      } else {
+      }
 
-        alert(data.message);
+      else {
+
+        toast.error(data.message);
 
       }
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.error(error);
 
-      alert("Server Error");
+      toast.error("Server Error");
 
     }
 
-  };
+  }
 
   return (
 
@@ -113,7 +137,9 @@ function Signup() {
           />
 
           <button onClick={handleSignup}>
+
             Create Account
+
           </button>
 
           <p>
@@ -121,7 +147,9 @@ function Signup() {
             Already have an account?
 
             <Link to="/login">
+
               {" "}Login
+
             </Link>
 
           </p>

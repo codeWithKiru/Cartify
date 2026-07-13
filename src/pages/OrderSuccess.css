@@ -1,71 +1,209 @@
+*{
+    box-sizing:border-box;
+}
+
 .success{
-    min-height:70vh;
+    min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     padding:40px;
+    background:linear-gradient(135deg,#eef5ff,#f9fbff);
 }
 
 .success-box{
+    width:100%;
+    max-width:650px;
     background:white;
     padding:50px;
-    border-radius:15px;
+    border-radius:20px;
     text-align:center;
-    box-shadow:0 10px 25px rgba(0,0,0,.15);
-    max-width:600px;
-    width:100%;
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+    animation:fadeIn .5s ease;
+}
+
+.success-icon{
+    width:100px;
+    height:100px;
+    background:#22c55e;
+    color:white;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0 auto 25px;
+    font-size:50px;
 }
 
 .success-box h1{
-    font-size:80px;
-}
-
-.success-box h2{
-    margin:20px 0;
+    color:#111827;
+    margin-bottom:15px;
+    font-size:38px;
 }
 
 .success-box p{
-    color:#666;
-    line-height:1.7;
-    margin-bottom:30px;
-}
-
-.success-box button{
-    padding:15px 35px;
-    background:#1b5e20;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+    color:#6b7280;
     font-size:18px;
+    margin-bottom:35px;
 }
 
-/* Mobile */
+/* ===========================
+   Payment Details
+=========================== */
 
-@media(max-width:480px){
+.payment-details{
+    background:#f9fafb;
+    border:1px solid #e5e7eb;
+    border-radius:15px;
+    padding:25px;
+    margin-bottom:35px;
+}
+
+.detail-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 0;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.detail-row:last-child{
+    border-bottom:none;
+}
+
+.detail-row span{
+    color:#6b7280;
+    font-size:16px;
+}
+
+.detail-row strong{
+    color:#111827;
+    font-size:17px;
+}
+
+.paid{
+    color:#22c55e !important;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.success-buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.continue-btn,
+.orders-btn{
+    padding:15px 28px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:bold;
+}
+
+.continue-btn{
+    background:#2563eb;
+    color:white;
+}
+
+.continue-btn:hover{
+    background:#1d4ed8;
+}
+
+.orders-btn{
+    background:#22c55e;
+    color:white;
+}
+
+.orders-btn:hover{
+    background:#16a34a;
+}
+
+/* ===========================
+   Animation
+=========================== */
+
+@keyframes fadeIn{
+
+from{
+
+opacity:0;
+transform:translateY(25px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+/* ===========================
+   Tablet
+=========================== */
+
+@media(max-width:768px){
 
 .success-box{
-
-padding:30px 20px;
-
+    padding:40px 30px;
 }
 
 .success-box h1{
+    font-size:32px;
+}
 
-font-size:60px;
+.success-icon{
+    width:85px;
+    height:85px;
+    font-size:42px;
+}
 
 }
 
-.success-box h2{
+/* ===========================
+   Mobile
+=========================== */
 
-font-size:24px;
+@media(max-width:480px){
 
+.success{
+    padding:20px;
 }
 
-.success-box button{
+.success-box{
+    padding:30px 20px;
+}
 
-width:100%;
+.success-box h1{
+    font-size:28px;
+}
 
+.success-box p{
+    font-size:16px;
+}
+
+.detail-row{
+    flex-direction:column;
+    gap:8px;
+    text-align:center;
+}
+
+.success-buttons{
+    flex-direction:column;
+}
+
+.continue-btn,
+.orders-btn{
+    width:100%;
 }
 
 }
